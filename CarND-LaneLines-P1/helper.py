@@ -4,19 +4,14 @@ import matplotlib.image as mpimg
 import numpy as np
 import cv2
 
-def colorselect(image):
+def colorselect(image, red, green, blue):
     # Grab the x and y size and make a copy of the image
     ysize = image.shape[0]
     xsize = image.shape[1]
     color_select = np.copy(image)
     
-    # Define color selection criteria
-    ###### MODIFY THESE VARIABLES TO MAKE YOUR COLOR SELECTION
-    red_threshold = 200
-    green_threshold = 160
-    blue_threshold = 0
-    ######
-    rgb_threshold = [red_threshold, green_threshold, blue_threshold]
+
+    rgb_threshold = [red, green, blue]
 
     # Do a boolean or with the "|" character to identify
     # pixels below the thresholds
@@ -70,7 +65,7 @@ def region_of_interest(img, vertices):
     return masked_image
 
 
-def draw_lines(img, lines, color=[255, 0, 0], thickness=2):
+def draw_lines(img, lines, color=[255, 0, 0], thickness=3):
     """
     NOTE: this is the function you might want to use as a starting point once you want to 
     average/extrapolate the line segments you detect to map out the full
@@ -87,10 +82,47 @@ def draw_lines(img, lines, color=[255, 0, 0], thickness=2):
     If you want to make the lines semi-transparent, think about combining
     this function with the weighted_img() function below
     """
+    
+    imshape = img.shape
+    half = imshape[1]/2 # x-axis's half
+    lengthleft = 0
+    lengthright = 0
+    slopeleft = 0
+    sloperight = 0
+    xright_min = 2147483647
+    xleft_max = -2147483647
+    yright_min = 2147483647
+    yleft_min = 2147483647
     for line in lines:
         for x1,y1,x2,y2 in line:
-            cv2.line(img, (x1, y1), (x2, y2), color, thickness)
-
+            slope = (y2-y1)/(x2-x1)
+            if slope > 0.5 and slope < 0.9 and x1 > half and x2 > half:
+                    length = math.sqrt((x2-x1)**2+(y2-y1)**2)
+                    lengthright += length
+                    sloperight += (slope*length)
+                    xright_min= min(xright_min, min(x1,x2))
+                    yright_min = min(yright_min, min(y1,y2))
+            if slope < -0.5 and slope > -0.8 and x1 < half and x2 < half:
+                    length = math.sqrt((x2-x1)**2+(y2-y1)**2)
+                    lengthleft += length
+                    slopeleft += (slope*length)
+                    xleft_max = max(xleft_max, max(x1,x2))
+                    yleft_min = min(yleft_min, min(y1,y2))
+                
+    if lengthright!=0:
+        sloperight = sloperight/lengthright
+        xright_end = max(min(xright_min,half+70),half+50)
+        yright_end = yright_min + sloperight*(xright_end - xright_min)
+        xright_start = xright_min - (yright_min - imshape[0])/ sloperight
+        cv2.line(img, (int(xright_start), imshape[0]), (int(xright_end), int(yright_end)), color, thickness)
+    if lengthleft!=0:
+        slopeleft = slopeleft/lengthleft
+        xleft_end = max(xleft_max,half-50)
+        yleft_end = yleft_min + slopeleft*(xleft_end - xleft_max)
+        xleft_start = xleft_max - (yleft_min - imshape[0])/slopeleft
+        cv2.line(img, (int(xleft_start), imshape[0]), (int(xleft_end), int(yleft_end)), color, thickness)     
+    #cv2.line(image, start_point, end_point, color, thickness)
+    
 def hough_lines(img, rho, theta, threshold, min_line_len, max_line_gap):
     """
     `img` should be the output of a Canny transform.
