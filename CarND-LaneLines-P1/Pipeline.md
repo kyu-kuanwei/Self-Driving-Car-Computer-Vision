@@ -62,5 +62,7 @@ In order to draw a single line on the left and right lanes, I modified the draw_
 
 ### 2. Identify potential shortcomings with your current pipeline
 
+   The challenge part I faced in this project is that when I set the threshold too high, the image all black out, but if I set   the threshold too small, the image contained a lot of noise and make the lines inaccurate. Another shortcoming could be the   shade. If the lines under the shadow, they would be hardly detected. 
 
-The challenge part I faced in this project is that when I set the threshold too high, the image all black out, but if I set the threshold too small, the image contained a lot of noise and make the lines inaccurate. Another shortcoming could be the shade. If the lines under the shadow, they would be hardly detected. 
+
+   
