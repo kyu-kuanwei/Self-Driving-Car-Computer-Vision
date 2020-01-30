@@ -12,17 +12,37 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/grayscale.jpg "Grayscale"
 
+[color]: ./process/colorselect.png "colorselect"
+[origin]: ./process/original.png "origin"
+[grayscale]: ./process/grayscale.png "grayscale"
+[Gussian]: ./process/gussian_blur.png "blur"
+[edge]: ./process/edges.png "edges"
+[masked]: ./process/masked_edges.png "masked"
+[hough]: ./process/hough_line.png "hough"
 
 ---
 
 ### Reflection
 
-### 1. Describe your pipeline. As part of the description, explain how you modified the draw_lines() function.
+### 1. My pipeline consisted of 5 steps.
 
-My pipeline consisted of 5 steps. 
-  - Selected the yellow and white collor from the original images, by setting the rgbthreshold [200,160,0]
+
+   ![Alt Text][origin]
+   
+   ![Alt Text][color]
+   
+   ![Alt Text][grayscale]
+   
+   ![Alt Text][gussian]
+   
+   ![Alt Text][edge]
+   
+   ![Alt Text][masked]
+   
+   ![Alt Text][hough]
+   
+  - Selected the yellow and white collor from the original images, by setting the rgbthreshold [220,180,0]
   - I converted the images to grayscale using the helper function with `grayscale`.
   - Degined a kernel size of 5 to make a Gaussian blurring to the grayscale image. This is mainly to avoid the noise and make the image more clearly.
   - Used the helper function `canny` to detect the edge of the grayscale image.
