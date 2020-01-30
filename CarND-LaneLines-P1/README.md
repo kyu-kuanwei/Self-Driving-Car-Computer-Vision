@@ -1,56 +1,65 @@
 # **Finding Lane Lines on the Road** 
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
-<img src="examples/laneLines_thirdPass.jpg" width="480" alt="Combined Image" />
-
-Overview
----
-
-When we drive, we use our eyes to decide where to go.  The lines on the road that show us where the lanes are act as our constant reference for where to steer the vehicle.  Naturally, one of the first things we would like to do in developing a self-driving car is to automatically detect lane lines using an algorithm.
-
-In this project you will detect lane lines in images using Python and OpenCV.  OpenCV means "Open-Source Computer Vision", which is a package that has many useful tools for analyzing images.  
-
-To complete the project, two files will be submitted: a file containing project code and a file containing a brief write up explaining your solution. We have included template files to be used both for the [code](https://github.com/udacity/CarND-LaneLines-P1/blob/master/P1.ipynb) and the [writeup](https://github.com/udacity/CarND-LaneLines-P1/blob/master/writeup_template.md).The code file is called P1.ipynb and the writeup template is writeup_template.md 
-
-To meet specifications in the project, take a look at the requirements in the [project rubric](https://review.udacity.com/#!/rubrics/322/view)
 
 
-Creating a Great Writeup
----
-For this project, a great writeup should provide a detailed response to the "Reflection" section of the [project rubric](https://review.udacity.com/#!/rubrics/322/view). There are three parts to the reflection:
+**Finding Lane Lines on the Road**
 
-1. Describe the pipeline
-
-2. Identify any shortcomings
-
-3. Suggest possible improvements
-
-We encourage using images in your writeup to demonstrate how your pipeline works.  
-
-All that said, please be concise!  We're not looking for you to write a book here: just a brief description.
-
-You're not required to use markdown for your writeup.  If you use another method please just submit a pdf of your writeup. Here is a link to a [writeup template file](https://github.com/udacity/CarND-LaneLines-P1/blob/master/writeup_template.md). 
+The goals / steps of this project are the following:
+* Make a pipeline that finds lane lines on the road
+* Reflect on your work in a written report
 
 
-The Project
----
+[//]: # (Image References)
 
-## If you have already installed the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) you should be good to go!   If not, you should install the starter kit to get started on this project. ##
 
-**Step 1:** Set up the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) if you haven't already.
+[color]: ./process/colorselect.png "colorselect"
+[origin]: ./process/original.png "origin"
+[grayscale]: ./process/grayscale.png "grayscale"
+[Gussian]: ./process/gussian_blur.png "blur"
+[edge]: ./process/edges.png "edges"
+[masked]: ./process/masked_edges.png "masked"
+[hough]: ./process/hough_line.png "hough"
 
-**Step 2:** Open the code in a Jupyter Notebook
+----
 
-You will complete the project code in a Jupyter notebook.  If you are unfamiliar with Jupyter Notebooks, check out [Udacity's free course on Anaconda and Jupyter Notebooks](https://classroom.udacity.com/courses/ud1111) to get started.
+### Reflection
 
-Jupyter is an Ipython notebook where you can run blocks of code and see results interactively.  All the code for this project is contained in a Jupyter notebook. To start Jupyter in your browser, use terminal to navigate to your project directory and then run the following command at the terminal prompt (be sure you've activated your Python 3 carnd-term1 environment as described in the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) installation instructions!):
+### 1. My pipeline consisted of 5 steps.
 
-`> jupyter notebook`
 
-A browser window will appear showing the contents of the current directory.  Click on the file called "P1.ipynb".  Another browser window will appear displaying the notebook.  Follow the instructions in the notebook to complete the project.  
+   ![Alt Text][origin]
+   
+   ![Alt Text][color]
+   
+   ![Alt Text][grayscale]
+   
+   ![Alt Text][gussian]
+   
+   ![Alt Text][edge]
+   
+   ![Alt Text][masked]
+   
+   ![Alt Text][hough]
+   
+  - Selected the yellow and white collor from the original images, by setting the rgbthreshold [220,180,0]
+  - I converted the images to grayscale using the helper function with `grayscale`.
+  - Degined a kernel size of 5 to make a Gaussian blurring to the grayscale image. This is mainly to avoid the noise and make the image more clearly.
+  - Used the helper function `canny` to detect the edge of the grayscale image.
+  - Used the region_of_interest fucntion to only consider pixels for color selection in the region where I expect to find the lane lines.
+  - Implenmented Hough Transformation to find lines.
+  - Implentmented to the video.
 
-**Step 3:** Complete the project and submit both the Ipython notebook and the project writeup
+In order to draw a single line on the left and right lanes, I modified the draw_lines() function by: 
 
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+  - Used the slope and the location of a single line to decide whther it is on the left or on the right.
+  - Find the middle value of x axis, set the limit to make sure that the line from different side will not crossover
+  - Weighted the slope and choose the endpoint of the lane lines
+  - Extend the lane lines to make it look normally
+  - Draw the lane lines
 
+
+
+### 2. Identify potential shortcomings with your current pipeline
+
+   The challenge part I faced in this project is that when I set the threshold too high, the image all black out, but if I set   the threshold too small, the image contained a lot of noise and make the lines inaccurate. Another shortcoming could be the   shade. If the lines under the shadow, they would be hardly detected. 
