@@ -28,19 +28,19 @@ The goals / steps of this project are the following:
 ### 1. My pipeline consisted of 5 steps.
 
 
-   ![Alt Text][origin]
+   ![origin][origin]
    
-   ![Alt Text][color]
+   ![color][color]
    
-   ![Alt Text][grayscale]
+   ![grayscale][grayscale]
    
-   ![Alt Text][gussian]
+   ![gussian][gussian]
    
-   ![Alt Text][edge]
+   ![edge][edge]
    
-   ![Alt Text][masked]
+   ![masked][masked]
    
-   ![Alt Text][hough]
+   ![hough][hough]
    
   - Selected the yellow and white collor from the original images, by setting the rgbthreshold [220,180,0]
   - I converted the images to grayscale using the helper function with `grayscale`.
